@@ -9,7 +9,7 @@ const serviceCards=[
  {icon:<Workflow size={25}/>,number:"03",name:"자동화 · 운영 시스템",desc:"반복되는 일은 줄이고 중요한 일에 집중할 수 있도록.",className:"service-automation"},
  {icon:<Bot size={25}/>,number:"04",name:"봇 · 맞춤형 프로그램",desc:"고객 응대부터 업무용 도구까지 필요한 기능을 정확하게.",className:"service-bot"}
 ];
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 export default async function Home(){
  const projects=(await publicProjects()).filter(p=>p.featured).slice(0,6);
  return <main>

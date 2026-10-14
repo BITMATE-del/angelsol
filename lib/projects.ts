@@ -1,4 +1,5 @@
 import { database } from "@/lib/db";
+import { unstable_cache } from "next/cache";
 import { projects as examples, type Project } from "@/lib/data";
 
 const databaseSql = database;
@@ -14,15 +15,16 @@ function convert(row: Row): Project {
   demoUrl:String(row.demo_url ?? "")
  };
 }
-export async function publicProjects():Promise<Project[]> {
+const publicProjectsQuery = unstable_cache(async ():Promise<Project[]> => {
  try {
   const sql=database();const rows = await sql`select * from portfolio_projects where published=true order by sort_order asc, id desc`;
   if(rows.length)return rows.map(convert);
   const all=await sql`select count(*)::int as count from portfolio_projects`;
   return Number(all[0].count)===0 ? examples : [];
  } catch {return examples;}
-}
-export async function publicProject(slug:string):Promise<Project|undefined>{
+},["portfolio-list"],{revalidate:60,tags:["portfolio"]});
+export const publicProjects = publicProjectsQuery;
+export const publicProject = unstable_cache(async (slug:string):Promise<Project|undefined>=>{
  try {
   const sql=database();const rows=await sql`select * from portfolio_projects where slug=${slug} and published=true limit 1`;
   if(rows.length) return convert(rows[0]);
@@ -31,6 +33,7 @@ export async function publicProject(slug:string):Promise<Project|undefined>{
  }catch{}
  return examples.find(p=>p.slug===slug);
 }
+},["portfolio-detail"],{revalidate:60,tags:["portfolio"]});
 export async function managedProjects():Promise<Project[]>{
  const sql=database();const rows=await sql`select * from portfolio_projects order by sort_order asc,id desc`;
  return rows.map(convert);
