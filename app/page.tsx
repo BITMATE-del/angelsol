@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, ArrowRight, Layers3, Sparkles, Bot, Smartphone, Workflow, ShieldCheck, Check, MoveUpRight } from "lucide-react";
 import ProjectCard from "@/components/project-card";
-import { projects } from "@/lib/data";
+import { publicProjects } from "@/lib/projects";
 
 const serviceCards=[
  {icon:<Layers3 size={25}/>,number:"01",name:"웹사이트 · 웹 플랫폼",desc:"비즈니스 목표를 선명하게 드러내는 사이트부터 복합 서비스까지.",className:"service-web"},
@@ -9,7 +9,9 @@ const serviceCards=[
  {icon:<Workflow size={25}/>,number:"03",name:"자동화 · 운영 시스템",desc:"반복되는 일은 줄이고 중요한 일에 집중할 수 있도록.",className:"service-automation"},
  {icon:<Bot size={25}/>,number:"04",name:"봇 · 맞춤형 프로그램",desc:"고객 응대부터 업무용 도구까지 필요한 기능을 정확하게.",className:"service-bot"}
 ];
-export default function Home(){
+export const dynamic = "force-dynamic";
+export default async function Home(){
+ const projects=(await publicProjects()).filter(p=>p.featured).slice(0,6);
  return <main>
   <section className="new-hero">
    <div className="shell hero-inner">

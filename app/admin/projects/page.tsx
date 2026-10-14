@@ -1,0 +1,4 @@
+import Link from "next/link";import {redirect} from "next/navigation";import {authorized} from "@/lib/auth";import {managedProjects} from "@/lib/projects";import ProjectManager from "./project-manager";
+export const dynamic="force-dynamic";
+export default async function ProjectsAdmin(){if(!await authorized())redirect("/admin");let projects:Awaited<ReturnType<typeof managedProjects>>=[];let error="";try{projects=await managedProjects()}catch{error="DB에 db/schema.sql을 적용하고 DATABASE_URL을 설정해야 합니다."}
+return <main className="shell cms-page"><div className="page-heading"><span className="eyebrow">ANGEL / CONTENT MANAGEMENT</span><h1>프로젝트 쇼룸 관리</h1><p>시안을 추가하고 대표 이미지, 갤러리, 공개 여부, 노출 순서를 관리하세요.</p><Link href="/admin" className="text-link">← 관리자 대시보드</Link></div>{error&&<div className="message error">{error}</div>}<ProjectManager initial={projects}/></main>}

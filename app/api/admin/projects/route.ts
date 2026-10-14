@@ -1,0 +1,13 @@
+import {NextResponse} from "next/server";
+import {authorized} from "@/lib/auth";
+import {database} from "@/lib/db";
+import {managedProjects} from "@/lib/projects";
+import {parseProject} from "@/lib/project-validation";
+export const runtime="nodejs";
+export const dynamic="force-dynamic";
+function failure(e:unknown){const m=e instanceof Error?e.message:"오류";return NextResponse.json({error:m.includes("duplicate key")?"같은 주소의 프로젝트가 이미 존재합니다.":m},{status:m.includes("DATABASE_")?503:400})}
+export async function GET(){if(!await authorized())return NextResponse.json({error:"Unauthorized"},{status:401});try{return NextResponse.json({projects:await managedProjects()})}catch{return NextResponse.json({error:"프로젝트 테이블 설정이 필요합니다."},{status:503})}}
+export async function POST(req:Request){if(!await authorized())return NextResponse.json({error:"Unauthorized"},{status:401});try{const p=parseProject(await req.json());const rows=await database()`insert into portfolio_projects(slug,title,category,description,detail,features,cover,status,featured,published,sort_order,image_url,gallery,demo_url)
+values(${p.slug},${p.title},${p.category},${p.description},${p.detail},${JSON.stringify(p.features)}::jsonb,${p.cover},${p.status},${p.featured},${p.published},${p.sortOrder},${p.imageUrl},${JSON.stringify(p.gallery)}::jsonb,${p.demoUrl}) returning id`;return NextResponse.json({id:rows[0].id},{status:201})}catch(e){return failure(e)}}
+export async function PUT(req:Request){if(!await authorized())return NextResponse.json({error:"Unauthorized"},{status:401});try{const b=await req.json();const id=Number(b.id);if(!Number.isSafeInteger(id)||id<1)return NextResponse.json({error:"잘못된 ID"},{status:400});const p=parseProject(b);const rows=await database()`update portfolio_projects set slug=${p.slug},title=${p.title},category=${p.category},description=${p.description},detail=${p.detail},features=${JSON.stringify(p.features)}::jsonb,cover=${p.cover},status=${p.status},featured=${p.featured},published=${p.published},sort_order=${p.sortOrder},image_url=${p.imageUrl},gallery=${JSON.stringify(p.gallery)}::jsonb,demo_url=${p.demoUrl},updated_at=now() where id=${id} returning id`;return NextResponse.json({ok:rows.length>0},{status:rows.length?200:404})}catch(e){return failure(e)}}
+export async function DELETE(req:Request){if(!await authorized())return NextResponse.json({error:"Unauthorized"},{status:401});try{const {id}=await req.json();if(!Number.isSafeInteger(id)||id<1)return NextResponse.json({error:"잘못된 ID"},{status:400});await database()`delete from portfolio_projects where id=${id}`;return NextResponse.json({ok:true})}catch{return NextResponse.json({error:"삭제에 실패했습니다."},{status:503})}}
