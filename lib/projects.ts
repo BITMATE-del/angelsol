@@ -32,7 +32,6 @@ export const publicProject = unstable_cache(async (slug:string):Promise<Project|
   if(Number(all[0].count)>0)return undefined;
  }catch{}
  return examples.find(p=>p.slug===slug);
-}
 },["portfolio-detail"],{revalidate:60,tags:["portfolio"]});
 export async function managedProjects():Promise<Project[]>{
  const sql=database();const rows=await sql`select * from portfolio_projects order by sort_order asc,id desc`;
