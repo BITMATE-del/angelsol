@@ -1,0 +1,8 @@
+export type Project={id?:number;slug:string;title:string;category:string;description:string;detail:string;features:string[];cover:string;status:string;featured:boolean};
+export const projects:Project[]=[
+{slug:"trading-platform",title:"트레이딩 플랫폼",category:"WEB PLATFORM",description:"복잡한 거래 정보를 한눈에 살펴볼 수 있는 웹 플랫폼.",detail:"데스크톱과 모바일을 아우르는 데이터 중심 인터페이스. 차트, 대시보드, 운영 관리 화면을 사용자 흐름에 맞춰 설계합니다.",features:["실시간 데이터 UI","반응형 트레이딩 화면","회원 및 운영 대시보드","권한별 접근 제어"],cover:"trading",status:"컨셉 쇼케이스",featured:true},
+{slug:"contents-automation",title:"콘텐츠 자동화 시스템",category:"AUTOMATION",description:"기획부터 발행, 성과 확인까지 하나의 작업 공간에서.",detail:"반복적인 콘텐츠 운영 업무를 효율적으로 관리하는 자동화 대시보드. 외부 플랫폼 연동은 해당 API와 권한에 맞춰 구성합니다.",features:["콘텐츠 캘린더","예약 작업 관리","계정별 운영 현황","성과 데이터 대시보드"],cover:"automation",status:"컨셉 쇼케이스",featured:true},
+{slug:"messenger-bot",title:"메신저 상담 솔루션",category:"BOT & SYSTEM",description:"상담 접수와 운영자 알림을 연결하는 맞춤형 봇.",detail:"채팅 환경에서 문의를 접수하고, 운영자는 관리자 화면에서 처리 상황을 확인하도록 설계합니다.",features:["상담 접수 플로우","관리자 알림","문의 상태 관리","접수 이력"],cover:"bot",status:"컨셉 쇼케이스",featured:true},
+{slug:"admin-dashboard",title:"맞춤형 관리자 시스템",category:"DASHBOARD",description:"운영에 필요한 데이터와 기능을 하나로 모은 관리 화면.",detail:"각 업무에 맞춘 CRM, 통계 화면, 운영 도구를 설계합니다.",features:["고객 및 업무 관리","권한별 메뉴","통계·리포트","작업 이력"],cover:"dashboard",status:"컨셉 쇼케이스",featured:true}
+];
+export const services=[{icon:"◈",name:"웹사이트 · 웹 플랫폼",desc:"랜딩 페이지부터 회원 기능이 있는 복합 웹 서비스까지"},{icon:"▣",name:"모바일 앱 · 웹앱",desc:"Android, iOS 및 모바일 환경에 맞는 경험"},{icon:"⌘",name:"업무 자동화",desc:"반복 작업을 줄이고 업무 흐름을 연결하는 시스템"},{icon:"◇",name:"메신저 봇 · 상담",desc:"고객 응대, 신청 접수, 관리자 알림"},{icon:"▦",name:"맞춤형 관리자",desc:"회원, 통계, 콘텐츠, 업무를 관리하는 전용 대시보드"}];
