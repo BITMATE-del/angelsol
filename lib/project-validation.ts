@@ -1,6 +1,6 @@
 import type { Project } from "@/lib/data";
 export const categories=["WEB PLATFORM","AUTOMATION","BOT & SYSTEM","DASHBOARD","APP","DESIGN","OTHER"];
-export function parseProject(body:unknown):Omit<Project,"id"> {
+export function parseProject(body:unknown):Required<Omit<Project,"id">> {
  if(!body||typeof body!=="object")throw Error("잘못된 요청입니다.");
  const b=body as Record<string,unknown>;
  const string=(k:string,max:number)=>{if(typeof b[k]!=="string"||String(b[k]).length>max)throw Error(k+" 입력값을 확인해 주세요.");return String(b[k]).trim()};
