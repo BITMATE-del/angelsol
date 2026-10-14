@@ -16,14 +16,16 @@ function convert(row: Row): Project {
 export async function publicProjects():Promise<Project[]> {
  try {
   const rows = await database()`select * from portfolio_projects where published=true order by sort_order asc, id desc`;
-  return rows.length ? rows.map(convert) : examples;
+  if(rows.length)return rows.map(convert);
+  const all=await database()`select count(*)::int as count from portfolio_projects`;
+  return Number(all[0].count)===0 ? examples : [];
  } catch {return examples;}
 }
 export async function publicProject(slug:string):Promise<Project|undefined>{
  try {
   const rows=await database()`select * from portfolio_projects where slug=${slug} and published=true limit 1`;
   if(rows.length) return convert(rows[0]);
-  const all=await database()`select count(*)::int as count from portfolio_projects where published=true`;
+  const all=await database()`select count(*)::int as count from portfolio_projects`;
   if(Number(all[0].count)>0)return undefined;
  }catch{}
  return examples.find(p=>p.slug===slug);
